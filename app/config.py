@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     # MODEL SETTINGS
     model_path: str = os.getenv("MODEL_PATH", "./models/transport_classifier.pkl")
     confidence_threshold: float = float(os.getenv("CONFIDENCE_THRESHOLD", "0.6"))
+    artifacts_path: str = "./models"
     
     # API SETTINGS
     api_title: str = "Transport Mode Detection API"

@@ -1,0 +1,35 @@
+{
+  "sensor_data_array": [
+    {
+      "accelerometer": {"x": 0.1, "y": 0.2, "z": 9.8},
+      "gyroscope": {"x": 0.01, "y": 0.02, "z": 0.03},
+      "gps": {"speed": 10.5, "altitude": 50, "lat": -37.8136, "lon": 144.9631},
+      "timestamp": "2025-08-28T10:00:00"
+    },
+    {
+      "accelerometer": {"x": 0.0, "y": 0.1, "z": 9.7},
+      "gyroscope": {"x": 0.02, "y": 0.01, "z": 0.04},
+      "gps": {"speed": 11.0, "altitude": 51, "lat": -37.8137, "lon": 144.9632},
+      "timestamp": "2025-08-28T10:00:01"
+    },
+    {
+      "accelerometer": {"x": 0.2, "y": 0.0, "z": 9.6},
+      "gyroscope": {"x": 0.03, "y": 0.02, "z": 0.01},
+      "gps": {"speed": 10.8, "altitude": 50, "lat": -37.8138, "lon": 144.9633},
+      "timestamp": "2025-08-28T10:00:02"
+    },
+    {
+      "accelerometer": {"x": 0.1, "y": 0.1, "z": 9.7},
+      "gyroscope": {"x": 0.01, "y": 0.03, "z": 0.02},
+      "gps": {"speed": 10.9, "altitude": 52, "lat": -37.8139, "lon": 144.9634},
+      "timestamp": "2025-08-28T10:00:03"
+    },
+    {
+      "accelerometer": {"x": 0.0, "y": 0.0, "z": 9.8},
+      "gyroscope": {"x": 0.02, "y": 0.01, "z": 0.03},
+      "gps": {"speed": 11.2, "altitude": 53, "lat": -37.8140, "lon": 144.9635},
+      "timestamp": "2025-08-28T10:00:04"
+    }
+  ],
+  "trip_id": "mock_trip_001"
+}

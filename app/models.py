@@ -2,7 +2,7 @@
 
 #Imports
 from pydantic import BaseModel, Field, validator
-from typing import Optional, Dict, Any
+from typing import Optional, List, Dict
 from datetime import datetime
 
 #Sensor Data Models
@@ -17,34 +17,36 @@ class GyroscopeData(BaseModel):
     z: float = Field(..., description="Z-axis angular velocity (rad/s)")
 
 class GPSData(BaseModel):
-    speed: Optional[float] = Field(None, description="Speed in km/h")
-    altitude: Optional[float] = Field(None, description="Altitude in meters")
+    speed: Optional[float] = Field(0.0, description="Speed in km/h")
+    altitude: Optional[float] = Field(0.0, description="Altitude in meters")
+    lat: Optional[float] = Field(None, description="Latitude")
+    lon: Optional[float] = Field(None, description="Longitude")
     accuracy: Optional[float] = Field(None, description="GPS accuracy in meters")
 
 class SensorReading(BaseModel):
     accelerometer: AccelerometerData
     gyroscope: GyroscopeData
     gps: Optional[GPSData] = None
-    timestamp: datetime
+    timestamp: Optional[datetime] = None
     
     @validator('timestamp', pre=True)
     def parse_timestamp(cls, v):
-        # Convert string to datetime if needed
         if isinstance(v, str):
-            return datetime.fromisoformat(v)
+            return datetime.fromisoformat(v.replace("Z", "+00:00"))
         return v
 
 #Request Model
 class SensorDataRequest(BaseModel):
-    sensor_data: SensorReading
-    window_size: int = Field(30, description="Time window in seconds")
+    sensor_data_array: List[SensorReading] = Field(
+        ..., description="List of 600 sensor samples for 1-minute window"
+    )
     user_id: Optional[str] = None
-    
-    @validator('window_size')
+    trip_id: Optional[str] = None
+
+    @validator('sensor_data_array')
     def validate_window_size(cls, v):
-        # Ensure window_size is reasonable (10-300 seconds)
-        if not 10 <= v <= 300:
-            raise ValueError('Window size must be between 10 and 300 seconds')
+        if len(v) != 600:
+            raise ValueError("Expected exactly 600 samples per 1-minute window")
         return v
 
 #Response Model

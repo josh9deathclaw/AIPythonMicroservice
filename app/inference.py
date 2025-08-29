@@ -12,26 +12,35 @@ import time
 import logging
 
 class TransportPredictor:
-    def __init__(self, model_path: str):
+    def __init__(self, model_path: str, artifacts_path: str = None):
         self.model_path = model_path
         self.model = None
-        self.preprocessor = DataPreprocessor()
+        self.preprocessor = DataPreprocessor(model_artifacts_path=artifacts_path)
         self.transport_modes = ["walking", "car", "bus", "train", "tram"]
         self.confidence_threshold = settings.confidence_threshold
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.setLevel(logging.INFO)
         
     def load_model(self):
-        """Load the trained ML model"""
+        """Load the trained ML model + preprocessing artifacts"""
         if not os.path.exists(self.model_path):
             raise FileNotFoundError(f"Model file not found: {self.model_path}")
+        
         try:
-            # Currently assuming scikit-learn; add branches for TF/PyTorch if needed
             self.model = joblib.load(self.model_path)
-            logging.info(f"Model loaded from {self.model_path}")
+            self.logger.info(f"✅ Model loaded from {self.model_path}")
         except Exception as e:
-            logging.error(f"Failed to load model: {e}")
+            self.logger.error(f"Failed to load model: {e}")
             raise
+        
+        # Log preprocessing artifacts status
+        if self.preprocessor.scaler:
+            self.logger.info(f"✅ Scaler loaded: mean shape={self.preprocessor.scaler.mean_.shape}, std shape={self.preprocessor.scaler.scale_.shape}")
+        if self.preprocessor.label_encoder:
+            self.logger.info(f"✅ Label encoder loaded: classes={self.preprocessor.label_encoder.classes_}")
+        if self.preprocessor.feature_means is not None and self.preprocessor.feature_stds is not None:
+            self.logger.info("✅ Feature stats loaded successfully")
+
     
     def predict(self, readings: List[SensorReading]) -> PredictionResponse:
         """
